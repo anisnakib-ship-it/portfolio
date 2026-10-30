@@ -126,13 +126,29 @@
   const setBg = (c) => (bg.style.backgroundColor = c);
   $$(".craft").forEach((c) => (c.style.background = c.style.getPropertyValue("--panel")));
 
-  // 1. Hello: the page loads, then scrolling dives into the left lens.
-  const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+  // Smooth, weighted scrolling. Lenis drives the native scroll position, so ScrollTrigger keeps working.
+  const lenis = window.Lenis ? new Lenis({ lerp: .085, wheelMultiplier: .9 }) : null;
+  if (lenis) {
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // Opening shot: a line of light, the letterbox opens, then the title card plays.
+  lenis?.stop();
+  const intro = gsap.timeline({ defaults: { ease: "expo.out" }, onComplete: () => lenis?.start() });
   intro
-    .from(".hero-hi", { y: 30, opacity: 0, duration: .7 })
-    .from(".li", { yPercent: 105, rotate: (i) => (i % 2 ? 10 : -10), duration: 1, stagger: .08, ease: "back.out(1.5)" }, "-=.4")
-    .from("#avatar-wrap", { yPercent: 70, duration: 1.2 }, "-=.8")
-    .from(["#hero-intro", "#scroll-hint"], { opacity: 0, y: 16, duration: .6, stagger: .1 }, "-=.5");
+    .to("#shutter b", { scaleX: 1, duration: .7, ease: "power3.inOut" })
+    .to("#shutter i", { scaleY: 0, duration: 1.2, ease: "expo.inOut" }, "+=.05")
+    .to("#shutter b", { opacity: 0, duration: .3 }, "<")
+    .from("#hero-stage", { scale: 1.12, duration: 2.4, ease: "power2.out" }, "<")
+    .from(".hero-hi", { y: 24, opacity: 0, duration: 1 }, "-=1.9")
+    .from(".li", { yPercent: 110, filter: "blur(14px)", duration: 1.5, stagger: .09 }, "<.1")
+    .from("#avatar-wrap", { yPercent: 75, duration: 1.8 }, "<.25")
+    .from(["#hero-intro", "#scroll-hint"], { opacity: 0, y: 16, duration: 1, stagger: .12 }, "-=1.1")
+    .set("#shutter", { display: "none" });
+
+  // 1. Hello: scrolling dives into the left lens.
 
   const flash = document.createElement("div");
   flash.className = "hero-flash";
@@ -184,7 +200,7 @@
   });
   beliefs.forEach((b, i) => {
     if (i > 0) beliefsTl.fromTo(b, { autoAlpha: 0, y: 70 }, { autoAlpha: 1, y: 0, duration: .5 });
-    beliefsTl.fromTo($$(".w", b), { opacity: .14 }, { opacity: 1, duration: .25, stagger: .09, ease: "none" });
+    beliefsTl.fromTo($$(".w", b), { opacity: .12, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: .3, stagger: .09, ease: "none" });
     beliefsTl.to({}, { duration: .4 });
     if (i < beliefs.length - 1) beliefsTl.to(b, { autoAlpha: 0, y: -70, duration: .5 });
   });
@@ -210,6 +226,60 @@
   gsap.from("#contact-avatar", { yPercent: 60, ease: "none", scrollTrigger: { trigger: "#contact", start: "top 80%", end: "top 10%", scrub: .6 } });
   gsap.from(".contact-inner > *", { y: 40, opacity: 0, stagger: .12, duration: .8, ease: "power3.out", scrollTrigger: { trigger: "#contact", start: "top 55%" } });
 
+  // Headlines rise out of a mask, word by word.
+  [".machine-copy h2", ".work-intro h2", "#about-lead", ".contact h2"].forEach((sel) => {
+    const el = $(sel);
+    el.innerHTML = el.textContent.split(" ").map((w) => `<span class="m"><span class="mi">${esc(w)}</span></span>`).join(" ");
+    gsap.from($$(".mi", el), {
+      yPercent: 115, duration: 1.2, ease: "expo.out", stagger: .06,
+      scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
+    });
+  });
+
+  /* ---------- drifting stars ---------- */
+
+  const sky = $("#stars"), ctx = sky.getContext("2d");
+  let stars = [];
+  function sizeSky() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    sky.width = innerWidth * dpr;
+    sky.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round((innerWidth * innerHeight) / 11000);
+    stars = Array.from({ length: n }, () => ({
+      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+      r: Math.random() * 1.3 + .3, depth: Math.random() * .5 + .1, phase: Math.random() * 6.3
+    }));
+  }
+  sizeSky();
+  window.addEventListener("resize", sizeSky);
+  gsap.ticker.add((time) => {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    const sy = window.scrollY;
+    for (const st of stars) {
+      const y = (((st.y - sy * st.depth * .25) % innerHeight) + innerHeight) % innerHeight;
+      ctx.globalAlpha = .25 + .45 * (.5 + .5 * Math.sin(time * 1.6 + st.phase));
+      ctx.fillStyle = "#f3e9d6";
+      ctx.beginPath();
+      ctx.arc(st.x, y, st.r, 0, 6.283);
+      ctx.fill();
+    }
+  });
+
+  /* ---------- soft cursor ---------- */
+
+  if (window.matchMedia("(pointer: fine)").matches) {
+    const cursor = $("#cursor"), ring = $("b", cursor), dot = $("i", cursor);
+    const ringX = gsap.quickTo(ring, "x", { duration: .5, ease: "power3" }), ringY = gsap.quickTo(ring, "y", { duration: .5, ease: "power3" });
+    const dotX = gsap.quickTo(dot, "x", { duration: .1 }), dotY = gsap.quickTo(dot, "y", { duration: .1 });
+    window.addEventListener("pointermove", (e) => {
+      ringX(e.clientX); ringY(e.clientY); dotX(e.clientX); dotY(e.clientY);
+      cursor.classList.toggle("hover", !!e.target.closest("a, button"));
+      cursor.classList.add("live");
+    }, { passive: true });
+    document.documentElement.addEventListener("pointerleave", () => cursor.classList.remove("live"));
+  }
+
   /* ---------- page colour + chapter timeline ---------- */
 
   chapters.forEach((el) => ScrollTrigger.create({
@@ -229,7 +299,7 @@
   });
   // The hello chapter is itself pinned, so its marker would land after its own pin.
   const starts = () => marks.map((m, i) => (i === 0 ? 0 : Math.max(0, m.start)));
-  const jump = (i) => window.scrollTo({ top: starts()[i] + 2, behavior: "smooth" });
+  const jump = (i) => lenis ? lenis.scrollTo(starts()[i] + 2, { duration: 1.8 }) : window.scrollTo({ top: starts()[i] + 2, behavior: "smooth" });
   buttons.forEach((b, i) => b.addEventListener("click", () => jump(i)));
   $$("[data-jump]").forEach((a) => a.addEventListener("click", (e) => {
     e.preventDefault();
