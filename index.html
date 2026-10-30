@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anis · Software, AI &amp; Automation</title>
+  <meta name="description" content="Anis: software developer, AI & automation specialist and business engineer.">
+  <meta name="theme-color" content="#24433c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23f0a531'/%3E%3Crect x='6' y='12' width='9' height='7' rx='3' fill='%2315120e'/%3E%3Crect x='17' y='12' width='9' height='7' rx='3' fill='%2315120e'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%2315120e'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="bg" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="logo" href="#hello">Anis</a>
+    <span class="status"><i></i><span id="status-text"></span></span>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work" data-jump="work">Work</a>
+      <a href="#about" data-jump="about">About</a>
+      <a href="#contact" data-jump="contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 1. Hello -->
+    <section class="hero chapter" id="hello" data-chapter="Hello" data-bg="#24433c">
+      <div class="hero-stage" id="hero-stage">
+        <p class="hero-hi">Hi, I'm</p>
+        <h1 class="hero-name" id="hero-name" aria-label="Anis"></h1>
+        <div class="avatar-wrap" id="avatar-wrap">
+          <svg class="avatar" id="avatar" viewBox="0 0 400 480" aria-hidden="true">
+            <defs>
+              <clipPath id="lens-clip">
+                <rect x="130" y="190" width="64" height="46" rx="15"/>
+                <rect x="206" y="190" width="64" height="46" rx="15"/>
+              </clipPath>
+            </defs>
+            <!-- hoodie -->
+            <path class="a-hoodie" d="M48 486 C48 388 112 346 200 346 C288 346 352 388 352 486 Z"/>
+            <path class="a-hood" d="M136 350 Q200 404 264 350 Q200 372 136 350 Z"/>
+            <path class="a-line" d="M178 376 L172 430 M222 376 L228 430"/>
+            <circle class="a-ink" cx="172" cy="434" r="6"/>
+            <circle class="a-ink" cx="228" cy="434" r="6"/>
+            <!-- neck + headphones -->
+            <rect class="a-skin" x="174" y="292" width="52" height="64" rx="10"/>
+            <path class="a-band" d="M128 324 Q200 392 272 324"/>
+            <g class="a-cups">
+              <circle cx="126" cy="322" r="24"/><circle class="a-cup-in" cx="126" cy="322" r="10"/>
+              <circle cx="274" cy="322" r="24"/><circle class="a-cup-in" cx="274" cy="322" r="10"/>
+            </g>
+            <!-- head -->
+            <g class="a-head" id="a-head">
+              <ellipse class="a-skin" cx="118" cy="228" rx="15" ry="22"/>
+              <ellipse class="a-skin" cx="282" cy="228" rx="15" ry="22"/>
+              <rect class="a-skin" x="118" y="118" width="164" height="196" rx="62"/>
+              <path class="a-hair" d="M114 186 C100 104 160 70 206 84 C258 64 312 106 288 184 C276 152 246 138 214 144 C226 128 214 118 196 124 C170 132 138 140 114 186 Z"/>
+              <g class="a-brows">
+                <path class="a-line" d="M142 178 Q160 170 180 176"/>
+                <path class="a-line" d="M220 176 Q240 170 258 178"/>
+              </g>
+              <g class="a-glasses" id="a-glasses">
+                <path class="a-line" d="M130 204 L116 198 M270 204 L284 198"/>
+                <rect class="a-lens" x="130" y="190" width="64" height="46" rx="15"/>
+                <rect class="a-lens" x="206" y="190" width="64" height="46" rx="15"/>
+                <path class="a-line" d="M194 206 Q200 199 206 206"/>
+                <g clip-path="url(#lens-clip)">
+                  <rect class="a-sunset" x="130" y="218" width="140" height="18"/>
+                  <rect class="a-glint" x="120" y="180" width="16" height="70" transform="skewX(-24)"/>
+                </g>
+              </g>
+              <path class="a-line" d="M180 270 Q200 290 222 268"/>
+            </g>
+            <!-- waving arm -->
+            <g transform="translate(-44 22)">
+              <g class="a-arm" id="a-arm">
+                <path class="a-hoodie" d="M64 452 C44 392 52 330 74 284 L120 294 C104 336 104 388 122 432 Z"/>
+                <path class="a-skin" d="M70 286 C58 266 56 238 64 220 C68 210 80 212 80 224 L82 236 L84 206 C85 194 100 194 100 206 L100 232 L104 202 C106 190 120 192 120 204 L118 236 L124 214 C127 204 140 208 138 220 L130 270 C128 286 122 296 112 298 Z"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <p class="hero-intro" id="hero-intro"></p>
+      </div>
+      <p class="scroll-hint" id="scroll-hint">Scroll to look through my glasses</p>
+    </section>
+
+    <!-- 2. What I do -->
+    <section class="crafts chapter" id="craft" data-chapter="Craft" data-bg="#b8601a">
+      <div class="crafts-pin" id="crafts-pin"></div>
+    </section>
+
+    <!-- 3. Beliefs -->
+    <section class="beliefs chapter" id="beliefs" data-chapter="Beliefs" data-bg="#1d1c33">
+      <div class="beliefs-pin" id="beliefs-pin"></div>
+    </section>
+
+    <!-- 4. The machine -->
+    <section class="machine chapter" id="machine" data-chapter="Machine" data-bg="#6b2f4a">
+      <div class="machine-pin">
+        <div class="machine-copy">
+          <h2>This is what I do all day.</h2>
+          <p>Messy inputs go in. Finished work comes out. Nobody copies anything by hand.</p>
+        </div>
+        <div class="line" id="line">
+          <div class="belt"><span></span></div>
+          <div class="box" id="box">
+            <div class="box-top"><i></i><i></i><i></i></div>
+            <svg class="gear" viewBox="0 0 100 100" aria-hidden="true"><path d="M43 4h14l3 13 9 4 11-7 10 10-7 11 4 9 13 3v14l-13 3-4 9 7 11-10 10-11-7-9 4-3 13H43l-3-13-9-4-11 7-10-10 7-11-4-9-13-3V43l13-3 4-9-7-11 10-10 11 7 9-4z"/><circle cx="50" cy="50" r="15"/></svg>
+            <span class="box-label">anis.ai</span>
+          </div>
+          <div id="items"></div>
+        </div>
+        <p class="tally"><b id="tally">0</b> tasks handled while you scrolled</p>
+      </div>
+    </section>
+
+    <!-- 5. Work -->
+    <section class="work chapter" id="work" data-chapter="Work" data-bg="#46521f">
+      <div class="work-pin">
+        <div class="work-track" id="work-track">
+          <div class="work-intro">
+            <h2>Things I've built</h2>
+            <p>Software, agents and automations that are running in real businesses right now.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. About -->
+    <section class="about chapter" id="about" data-chapter="About" data-bg="#33261f">
+      <div class="about-inner">
+        <h2 class="about-lead" id="about-lead"></h2>
+        <div class="about-cols">
+          <div class="about-text" id="about-text"></div>
+          <ul class="services" id="services"></ul>
+        </div>
+        <div class="skills" id="skills"></div>
+      </div>
+    </section>
+
+    <!-- 7. Contact -->
+    <section class="contact chapter" id="contact" data-chapter="Contact" data-bg="#24433c">
+      <div class="contact-inner">
+        <h2>Let's make your business run itself.</h2>
+        <div class="contact-row">
+          <a class="email" id="email"></a>
+          <button class="copy" id="copy" type="button">Copy</button>
+        </div>
+        <p class="links" id="links"></p>
+      </div>
+      <div class="avatar-wrap contact-avatar" id="contact-avatar"></div>
+    </section>
+  </main>
+
+  <nav class="timeline" id="timeline" aria-label="Chapters">
+    <div class="ticks"></div>
+    <div class="needle" id="needle"></div>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
