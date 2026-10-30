@@ -32,19 +32,25 @@
     <div class="belief"><p>${b.split(" ").map((w) => `<span class="w">${esc(w)}</span>`).join(" ")}</p></div>`).join("");
 
   const CARD = {
-    chat: () => `<div class="cv cv-chat"><span class="b">Hi, we need help automating our sales follow-ups.</span><span class="b me">Thanks! Two quick questions so I can send the right proposal…</span><span class="score">Lead score <i></i> 82</span></div>`,
-    doc: () => `<div class="cv cv-doc"><div class="sheet"><i></i><i class="hl"></i><i></i><i></i><i class="hl"></i><i></i><i></i><i class="hl"></i></div></div>`,
-    chart: () => `<div class="cv cv-chart"><div class="row"><span class="kpi"><small>Orders</small>1,284</span><span class="kpi"><small>Margin</small>31%</span><span class="kpi"><small>Late</small>3</span></div><div class="bars">${[40, 52, 47, 63, 70, 58, 74, 81, 77, 92].map((h) => `<i style="height:${h}%"></i>`).join("")}</div></div>`
+    report: () => `<div class="cv cv-report"><span class="pg"></span><span class="pg"></span><div class="pg top"><b>Export plan</b><div class="mini-bars">${[30, 46, 38, 62, 74, 90].map((h) => `<i style="height:${h}%"></i>`).join("")}</div><i></i><i></i><i class="short"></i></div><span class="count">p. 1 of 200</span><span class="steps">${Array.from({ length: 9 }, () => "<i></i>").join("")}</span></div>`,
+    ledger: () => `<div class="cv cv-ledger">${[["Steel sheet S235", "PRJ-114", "€12,400"], ["Welding gas", "PRJ-114", "₺18,250"], ["Crane rental", "PRJ-121", "$3,900"], ["Coating & paint", "PRJ-121", "₺7,600"]].map(([a, p, v]) => `<div class="row"><span>${a}</span><em>${p}</em><b>${v}</b></div>`).join("")}<div class="row total"><span>Job cost, PRJ-114</span><b>auto</b></div></div>`,
+    carbon: () => `<div class="cv cv-carbon"><div class="doc"><i></i><i></i><i></i><small>fuel_receipt.jpg</small></div><span class="arrow"></span><div class="out"><b>4.82</b><small>tCO₂e</small><div class="scopes"><i></i><i></i><i></i></div><span class="ok">Approved</span></div></div>`,
+    proposal: () => `<div class="cv cv-proposal"><b>Grant proposal</b>${Array.from({ length: 13 }, (_, i) => `<span class="sec" style="--d:${i * 180}ms"><i></i></span>`).join("")}<span class="n">13 / 13 sections</span></div>`
   };
-  $("#work-track").insertAdjacentHTML("beforeend", D.projects.map((p) => `
-    <a class="card" href="${esc(p.href || "#")}">
-      <div class="card-screen">${p.sample ? `<span class="sample">Sample</span>` : ""}${CARD[p.visual] ? CARD[p.visual]() : ""}</div>
+  $("#work-track").insertAdjacentHTML("beforeend", D.projects.map((p) => {
+    const tag = p.href ? "a" : "article";
+    return `
+    <${tag} class="card"${p.href ? ` href="${esc(p.href)}"` : ""}>
+      <div class="card-screen"><span class="kind">${esc(p.kind || "")}</span>${CARD[p.visual] ? CARD[p.visual]() : ""}</div>
       <div class="card-meta"><h3>${esc(p.title)}</h3><span class="card-year">${esc(p.year)}</span></div>
-      <p>${esc(p.summary)}</p>
+      <p class="card-summary">${esc(p.summary)}</p>
+      ${p.before ? `<dl class="ba"><div><dt>Before</dt><dd>${esc(p.before)}</dd></div><div><dt>After</dt><dd>${esc(p.after)}</dd></div></dl>` : ""}
       <div class="tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
-    </a>`).join("") + `<p class="work-end">More on the way. Ask me about the rest.</p>`);
+    </${tag}>`;
+  }).join("") + `<p class="work-end">There's more I can't show here. Ask me about it.</p>`);
 
-  $("#about-lead").textContent = "Code, AI and business sense, in the same person.";
+  $("#marquee").innerHTML = [...D.stack, ...D.stack].map((t) => `<span>${esc(t)}</span>`).join("");
+  $("#about-lead").textContent = "Half developer, half business engineer. Both halves hate repetitive work.";
   $("#about-text").innerHTML = D.about.map((p) => `<p>${esc(p)}</p>`).join("");
   $("#services").innerHTML = D.services.map((s) => `<li><b>${esc(s.name)}</b><span>${esc(s.desc)}</span></li>`).join("");
   $("#skills").innerHTML = D.skills.map((g) => `<div><h3>${esc(g.group)}</h3><ul>${g.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`).join("");
@@ -89,6 +95,19 @@
   const items = $$(".item", itemsEl).map((el, i) => ({ el, tilt: ((i * 37) % 36) - 18 }));
   const line = $("#line"), box = $("#box"), gear = $(".gear"), stripes = $(".belt span"), tally = $("#tally");
 
+  // The caption names what the machine just turned into what.
+  const caption = $("#caption"), capIn = $(".caption-in", caption), capOut = $(".caption-out", caption);
+  let shown = -1;
+  function showCaption(done) {
+    const i = Math.max(0, done - 1) % D.machine.length;
+    if (i === shown) return;
+    shown = i;
+    [capIn.textContent, capOut.textContent] = D.machine[i];
+    caption.classList.remove("swap");
+    void caption.offsetWidth;
+    caption.classList.add("swap");
+  }
+
   function runLine(p) {
     const w = line.clientWidth;
     let done = 0, busy = false;
@@ -106,6 +125,7 @@
     gear.style.transform = `rotate(${p * 900}deg)`;
     stripes.style.transform = `translateX(${(p * 3000) % 40}px)`;
     tally.textContent = done;
+    showCaption(done);
   }
 
   /* ---------- no animation library, or reduced motion: a plain long page ---------- */
